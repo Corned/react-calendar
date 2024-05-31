@@ -1,0 +1,20 @@
+.calendar {
+  font-family: sans-serif;
+}
+
+.calendar__header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar__header-title {
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid gray;
+}
+
+.calendar__days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+}
