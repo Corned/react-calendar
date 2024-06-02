@@ -1,7 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
 * {
   box-sizing: content-box;
   margin: 0;
   padding: 0;
+  font-family: "Rubik";
+}
+
+html, body, #root, .app {
+  height: 100%;
+}
+
+button {
+  border: none;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.nav {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  padding: 10px;
+}
+
+.nav > button {
+  padding: 4px 8px;
 }
 
 .calendar {
@@ -38,7 +68,7 @@
 
 .calendar__day {
   height: 100px;
-  padding: 10px;
+  padding: 4px;
   background-color: white;
 
   display: flex;
@@ -54,4 +84,13 @@
 
 .day__number {
   margin: 0 0 0 auto;
+  aspect-ratio: 1;
+  font-weight: bold;
+  padding: 4px 8px;
+}
+
+.day__number.today {
+  background-color: black;
+  color: white;
+  border-radius: 6px;
 }

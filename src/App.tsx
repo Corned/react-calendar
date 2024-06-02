@@ -2,9 +2,12 @@ import { useState } from "react"
 import "./App.css"
 
 import moment from "moment"
+import "moment/dist/locale/fi"
+
+moment.locale("fi")
 
 const Calendar = () => {
-  const [ date, setDate ] = useState(moment())
+  const [ date, setDate ] = useState(moment())  
 
   const addMonth = () => {
     setDate((oldDate) => oldDate.clone().add({ month: 1 }))
@@ -26,58 +29,60 @@ const Calendar = () => {
 
   const items = []
 
-  // 
-
-
+  const today = moment()
   const lastMonth = date.clone().subtract({ month: 1 })
   const daysInLastMonth = lastMonth.daysInMonth()
 
-  const nextMonth = date.clone().subtract({ month: 1 })
+  const nextMonth = date.clone().add({ month: 1 })
   const daysInNextMonth = nextMonth.daysInMonth()
-  
+ 
   const firstDayOfCurrentMonth = moment([ date.year(), date.month(), 1 ]).day()
+
+  console.time("items")
   
 
 
+  // Previous month
   for (let dayNumber = (daysInLastMonth - firstDayOfCurrentMonth); dayNumber < daysInLastMonth; dayNumber++) {
     items.push({
-      dayNumber: dayNumber + 1,
+      date: moment([ lastMonth.year(), lastMonth.month(), dayNumber + 1 ]),
       current: false,
     })
   }
 
+  // Current month
   for (let dayNumber = 1; dayNumber <= date.daysInMonth(); dayNumber++) {
     items.push({
-      dayNumber,
+      date: moment([ date.year(), date.month(), dayNumber ]),
       currentMonth: true,
     })
   }
   
-  let i = 0
-  while (items.length < rows * columns) {
-    i++
+  // Next month
+  const daysInPreviousAndCurrent = items.length
+  for (let dayNumber = items.length; dayNumber < rows * columns; dayNumber++) {
     items.push({
-      dayNumber: i,
+      date: moment([ nextMonth.year(), nextMonth.month(), dayNumber - daysInPreviousAndCurrent + 1 ]),
       currentMonth: false,
     })
+
   }
 
-
+  console.timeEnd("items") 
 
   return (
 
     <>
       
-      <p>{ date.format("MM/YYYY") }</p>
+      <p>{ date.format("MMMM YYYY") }</p>
 
-      <button onClick={removeMonth}>{"<-"}</button>
-      <button onClick={addMonth}>{"->"}</button>
+      <div className="nav">
+        <button onClick={() => setDate(moment())}>{"current"}</button>
+        <button onClick={removeMonth}>{"previous"}</button>
+        <button onClick={addMonth}>{"next"}</button>
+      </div>
       
-
       <div className="calendar">
-
-
-
         <div className="calendar__header">
           {
             days.map((day) => (
@@ -91,7 +96,9 @@ const Calendar = () => {
           {
             items.map((item) => (
               <div className={`calendar__day ${item.currentMonth ? "" : "grayed"}`}>
-                <p className="day__number">{ item.dayNumber.toString().padStart(2, "0") }</p>
+                <p className={`day__number ${ item.date.isSame(today, "day") ? "today" : "" }`}>
+                  { item.date.date().toString().padStart(2, "0") }
+                </p>
               </div>
             ))
           }
@@ -105,10 +112,6 @@ const Calendar = () => {
 const App = () => {
   return (
     <div className="app">
-      <h1>Calendar</h1>
-
-
-
       <Calendar />
     </div>
   )
