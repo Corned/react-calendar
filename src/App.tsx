@@ -16,13 +16,7 @@ const days = [
 const mockData = [
   {
     start: moment([2024, 5, 5]),
-    end: moment([2024, 5, 12]),
-    label: "9:00 - 15:00",
-    color: "red",
-  },
-  {
-    start: moment([2024, 5, 5]),
-    end: moment([2024, 5, 12]),
+    end: moment([2024, 5, 8]),
     label: "9:00 - 15:00",
     color: "red",
   },
@@ -83,8 +77,18 @@ const Calendar = () => {
       date: moment([ nextMonth.year(), nextMonth.month(), dayNumber - daysInPreviousAndCurrent + 1 ]),
       currentMonth: false,
     })
-
   }
+
+
+  const testing = []
+  const a = mockData.map((data) => {
+    const columnsOccupied = data.end.diff(data.start, "days") + 1
+    const rowsOccupied = Math.ceil((columnsOccupied + data.start.day()) / columns)
+
+    console.log({ rowsOccupied, columnsOccupied });
+    
+  })
+
 
   console.timeEnd("items") 
 
