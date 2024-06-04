@@ -8,6 +8,27 @@ import "moment/dist/locale/fi"
 
 moment.locale("fi")
 
+
+const days = [
+  "Su", "Ma", "Ti", "Ke",
+  "To", "Pe", "La",
+]
+
+const mockData = [
+  {
+    start: moment([2024, 5, 2]),
+    end: moment([2024, 5, 14]),
+    label: "9:00 - 15:00",
+    color: "red",
+  },
+  {
+    start: moment([2024, 5, 7]),
+    end: moment([2024, 5, 9]),
+    label: "15:00 - 16:00",
+    color: "blue",
+  },
+]
+
 const Calendar = () => {
   const [ date, setDate ] = useState(moment())  
 
@@ -20,10 +41,6 @@ const Calendar = () => {
   }
 
 
-  const days = [
-    "Su", "Ma", "Ti", "Ke",
-    "To", "Pe", "La",
-  ]
 
   const columns = 7
   const rows = 6
@@ -98,12 +115,29 @@ const Calendar = () => {
           {
             items.map((item) => (
               <div className={`calendar__day ${item.currentMonth ? "" : "grayed"}`}>
-                <p className={`day__number ${ item.date.isSame(today, "day") ? "today" : "" }`}>
-                  { item.date.date().toString().padStart(2, "0") }
-                </p>
+                <div className="calendar__day-header">
+                  <p className={`day__number ${ item.date.isSame(today, "day") ? "today" : "" }`}>
+                    { item.date.date().toString().padStart(2, "0") }
+                  </p>
+                </div>
+
+                <div className="data">
+                  {
+                    mockData.map((data) => {
+                      if (item.date.isBetween(data.start, data.end) || item.date.isSame(data.start, "day") || item.date.isSame(data.end, "day") ) {
+                        return (
+                          <p className={`data__entry ${item.date.isSame(data.start, "day") && "first"} ${item.date.isSame(data.end, "day") && "last"}`} style={{ background: data.color}}>
+                            { data.label }
+                          </p>
+                        )
+                      }
+                    })
+                  }
+                </div>
               </div>
             ))
           }
+
         </div>
 
       </div>

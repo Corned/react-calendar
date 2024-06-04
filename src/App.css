@@ -68,12 +68,17 @@ button {
 
 .calendar__day {
   height: 100px;
-  padding: 4px;
   background-color: white;
 
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 36px 1fr;
   outline: 1px solid #E8EDF3;
+}
+
+.calendar__day-header {
+  display: flex;
+  flex-direction: row;
+  padding: 4px;
 }
 
 .calendar__day.grayed {
@@ -83,7 +88,6 @@ button {
 }
 
 .day__number {
-  margin: 0 0 0 auto;
   aspect-ratio: 1;
   font-weight: bold;
   padding: 4px 8px;
@@ -93,4 +97,27 @@ button {
   background-color: black;
   color: white;
   border-radius: 6px;
+}
+
+.data {
+  z-index: 5;
+}
+
+.data__entry {
+  z-index: 5;
+  width: calc(100% + 2px);
+  transform: translateX(-1px);
+  padding: 4px 0;
+  color: transparent;
+  font-weight: bold;
+}
+
+.data__entry.first {
+  border-radius: 10px 0 0 10px;
+  padding-left: 10px;
+  color: white;
+}
+
+.data__entry.last {
+  border-radius: 0 10px 10px 0;
 }
