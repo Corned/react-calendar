@@ -96,9 +96,9 @@ const Calendar = () => {
       <p>{ date.format("MMMM YYYY") }</p>
 
       <div className="nav">
-        <button onClick={() => setDate(moment())}>{"current"}</button>
-        <button onClick={removeMonth}>{"previous"}</button>
-        <button onClick={addMonth}>{"next"}</button>
+        <button onClick={() => setDate(moment())}>{"Tänään"}</button>
+        <button onClick={removeMonth}>{"Edellinen"}</button>
+        <button onClick={addMonth}>{"Seuraava"}</button>
       </div>
       
       <div className="calendar">
@@ -111,8 +111,43 @@ const Calendar = () => {
             ))
           }
         </div>
-        <div className="calendar__days">
+        <div className="calendar__body">
+
           {
+            Array.from({ length: 6 }).map((_, week) => {
+              return (
+                <div className="calendar__week">
+
+                  {
+                    Array.from({ length: 7 }).map((_, day) => {
+                      const item = items[7 * week + day]
+                      
+                      return (
+                        <div className={`calendar__day ${item.currentMonth ? "" : "grayed"}`}>
+                          <div className="calendar__day-header">
+                            <p className={`calendar__day-number ${ item.date.isSame(today, "day") ? "today" : "" }`}>
+                              { item.date.date().toString().padStart(2, "0") }
+                            </p>
+                          </div>
+
+                          <div className="calendar__day-data">
+      
+                          </div>
+                        </div>
+                      )
+                    })
+                  }
+
+                </div>
+              )
+            })
+          }
+
+
+
+
+
+{/*           {
             items.map((item) => (
               <div className={`calendar__day ${item.currentMonth ? "" : "grayed"}`}>
                 <div className="calendar__day-header">
@@ -136,7 +171,7 @@ const Calendar = () => {
                 </div>
               </div>
             ))
-          }
+          } */}
 
         </div>
 
