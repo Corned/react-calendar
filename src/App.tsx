@@ -8,7 +8,6 @@ import "moment/dist/locale/fi"
 
 moment.locale("fi")
 
-
 const days = [
   "Su", "Ma", "Ti", "Ke",
   "To", "Pe", "La",
@@ -16,16 +15,16 @@ const days = [
 
 const mockData = [
   {
-    start: moment([2024, 5, 2]),
-    end: moment([2024, 5, 14]),
+    start: moment([2024, 5, 5]),
+    end: moment([2024, 5, 12]),
     label: "9:00 - 15:00",
     color: "red",
   },
   {
-    start: moment([2024, 5, 7]),
-    end: moment([2024, 5, 9]),
-    label: "15:00 - 16:00",
-    color: "blue",
+    start: moment([2024, 5, 5]),
+    end: moment([2024, 5, 12]),
+    label: "9:00 - 15:00",
+    color: "red",
   },
 ]
 
@@ -92,13 +91,14 @@ const Calendar = () => {
   return (
 
     <>
-      
-      <p>{ date.format("MMMM YYYY") }</p>
+      <div className="calendar__controls">
+        <p>{ date.format("MMMM YYYY") }</p>
 
-      <div className="nav">
-        <button onClick={() => setDate(moment())}>{"Tänään"}</button>
-        <button onClick={removeMonth}>{"Edellinen"}</button>
-        <button onClick={addMonth}>{"Seuraava"}</button>
+        <div className="nav">
+          <button onClick={() => setDate(moment())}>{"Tänään"}</button>
+          <button onClick={removeMonth}>{"Edellinen"}</button>
+          <button onClick={addMonth}>{"Seuraava"}</button>
+        </div>
       </div>
       
       <div className="calendar">
@@ -131,7 +131,22 @@ const Calendar = () => {
                           </div>
 
                           <div className="calendar__day-data">
-      
+                            {
+                              mockData.map((data) => {
+
+                                const isBetween = item.date.isBetween(data.start, data.end)
+                                const isOnFirstDay = item.date.isSame(data.start, "day")
+                                const isOnLastDay = item.date.isSame(data.end, "day")
+                                
+                                if (isBetween || isOnFirstDay || isOnLastDay) {
+                                  return (
+                                    <div className={`data ${isOnFirstDay && "first-day"} ${isOnLastDay && "last-day"}`}>
+                                      <p>{ data.label }</p>
+                                    </div>
+                                  )
+                                }
+                              })
+                            }
                           </div>
                         </div>
                       )
@@ -143,35 +158,6 @@ const Calendar = () => {
             })
           }
 
-
-
-
-
-{/*           {
-            items.map((item) => (
-              <div className={`calendar__day ${item.currentMonth ? "" : "grayed"}`}>
-                <div className="calendar__day-header">
-                  <p className={`day__number ${ item.date.isSame(today, "day") ? "today" : "" }`}>
-                    { item.date.date().toString().padStart(2, "0") }
-                  </p>
-                </div>
-
-                <div className="data">
-                  {
-                    mockData.map((data) => {
-                      if (item.date.isBetween(data.start, data.end) || item.date.isSame(data.start, "day") || item.date.isSame(data.end, "day") ) {
-                        return (
-                          <p className={`data__entry ${item.date.isSame(data.start, "day") && "first"} ${item.date.isSame(data.end, "day") && "last"}`} style={{ background: data.color}}>
-                            { data.label }
-                          </p>
-                        )
-                      }
-                    })
-                  }
-                </div>
-              </div>
-            ))
-          } */}
 
         </div>
 
