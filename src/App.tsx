@@ -16,8 +16,14 @@ const days = [
 const mockData = [
   {
     start: moment([2024, 5, 5]),
-    end: moment([2024, 5, 8]),
-    label: "9:00 - 15:00",
+    end: moment([2024, 5, 10]),
+    label: "Matematiikka 1",
+    color: "red",
+  },
+  {
+    start: moment([2024, 5, 12]),
+    end: moment([2024, 5, 29]),
+    label: "Matematiikka 1",
     color: "red",
   },
 ]
@@ -82,13 +88,69 @@ const Calendar = () => {
 
   const testing = []
   const a = mockData.map((data) => {
+    const startingColumn = data.start.day()
+    const startingRow = Math.floor(items.findIndex((item) => item.date.isSame(data.start, "day")) / 7)
     const columnsOccupied = data.end.diff(data.start, "days") + 1
     const rowsOccupied = Math.ceil((columnsOccupied + data.start.day()) / columns)
 
-    console.log({ rowsOccupied, columnsOccupied });
+    console.log({ startingColumn, startingRow, rowsOccupied, columnsOccupied });
+
+    let l = columnsOccupied
+    let x = startingColumn + 1
+    let y = startingRow
+
+    const elements = []
+    let gridColumnStart = x
     
+    while (l > 0) {
+
+
+      x++
+      l--
+
+      // Row changes
+      if (x >= columns) {      
+        
+        console.log(`${gridColumnStart} / ${ x + 1 }`);
+        
+
+        elements.push({
+          element: (      
+            <div className="asd" style={{ gridColumn: `${gridColumnStart} / ${ x + 1 }` }}>
+              <p>hello world, this is a test message, please remain calm</p>
+            </div>
+          ),
+          row: y,
+        })
+
+        x = 0
+        y++
+        gridColumnStart = 1
+      }
+    }
+
+        
+    elements.push({
+      element: (      
+        <div className="asd" style={{ gridColumn: `${gridColumnStart} / ${ x + 1 }` }}>
+          <p>hello world, this is a test message, please remain calm</p>
+        </div>
+      ),
+      row: y,
+    })
+
+
+
+    console.log(elements);
+    
+    
+
+    // :P
+    return elements
   })
 
+  console.log(">>>", a[1]);
+  
 
   console.timeEnd("items") 
 
@@ -121,36 +183,24 @@ const Calendar = () => {
             Array.from({ length: 6 }).map((_, week) => {
               return (
                 <div className="calendar__week">
+                  <div className="calendar__task-container">
+                    {
+                      a[1].map((data) => {
+                        return data.row === week && data.element
+                      })
+                    }
+                  </div>
 
                   {
                     Array.from({ length: 7 }).map((_, day) => {
                       const item = items[7 * week + day]
                       
                       return (
-                        <div className={`calendar__day ${item.currentMonth ? "" : "grayed"}`}>
-                          <div className="calendar__day-header">
-                            <p className={`calendar__day-number ${ item.date.isSame(today, "day") ? "today" : "" }`}>
+                        <div className={`calendar__cell ${item.currentMonth ? "" : "grayed"}`}>
+                          <div className="calendar__cell-header">
+                            <p className={`calendar__cell-number ${ item.date.isSame(today, "day") ? "today" : "" }`}>
                               { item.date.date().toString().padStart(2, "0") }
                             </p>
-                          </div>
-
-                          <div className="calendar__day-data">
-                            {
-                              mockData.map((data) => {
-
-                                const isBetween = item.date.isBetween(data.start, data.end)
-                                const isOnFirstDay = item.date.isSame(data.start, "day")
-                                const isOnLastDay = item.date.isSame(data.end, "day")
-                                
-                                if (isBetween || isOnFirstDay || isOnLastDay) {
-                                  return (
-                                    <div className={`data ${isOnFirstDay && "first-day"} ${isOnLastDay && "last-day"}`}>
-                                      <p>{ data.label }</p>
-                                    </div>
-                                  )
-                                }
-                              })
-                            }
                           </div>
                         </div>
                       )
