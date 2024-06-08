@@ -9,20 +9,20 @@ import "moment/dist/locale/fi"
 moment.locale("fi")
 
 const days = [
-  "Su", "Ma", "Ti", "Ke",
-  "To", "Pe", "La",
+  "Ma", "Ti", "Ke",
+  "To", "Pe", "La", "Su",
 ]
 
 const mockData = [
-  {
+/*   {
     start: moment([2024, 5, 5]),
     end: moment([2024, 5, 10]),
     label: "Matematiikka 1",
     color: "red",
-  },
+  }, */
   {
-    start: moment([2024, 5, 12]),
-    end: moment([2024, 5, 29]),
+    start: moment([2024, 5, 11]),
+    end: moment([2024, 5, 12]),
     label: "Matematiikka 1",
     color: "red",
   },
@@ -54,7 +54,7 @@ const Calendar = () => {
   const nextMonth = date.clone().add({ month: 1 })
   const daysInNextMonth = nextMonth.daysInMonth()
  
-  const firstDayOfCurrentMonth = moment([ date.year(), date.month(), 1 ]).day()
+  const firstDayOfCurrentMonth = moment([ date.year(), date.month(), 1 ]).day() - 1
 
   console.time("items")
   
@@ -88,58 +88,64 @@ const Calendar = () => {
 
   const testing = []
   const a = mockData.map((data) => {
-    const startingColumn = data.start.day()
+    const startingColumn = data.start.day() - 1
     const startingRow = Math.floor(items.findIndex((item) => item.date.isSame(data.start, "day")) / 7)
     const columnsOccupied = data.end.diff(data.start, "days") + 1
     const rowsOccupied = Math.ceil((columnsOccupied + data.start.day()) / columns)
 
     console.log({ startingColumn, startingRow, rowsOccupied, columnsOccupied });
 
-    let l = columnsOccupied
-    let x = startingColumn + 1
-    let y = startingRow
-
     const elements = []
-    let gridColumnStart = x
-    
-    while (l > 0) {
 
+    let currentColumn = startingColumn
+    let currentRow = startingRow
+    let cellsToVisit = columnsOccupied
+    let creatingLabel = true
 
-      x++
-      l--
+    let from = currentColumn
 
-      // Row changes
-      if (x >= columns) {      
-               
+    while (cellsToVisit > 0) {
+      creatingLabel = true
+      currentColumn++
+      cellsToVisit--
+
+      console.log({ currentColumn, currentRow});
+
+      if (currentColumn === columns) {
 
         elements.push({
           element: (      
-            <div className={`asd ${elements.length === 0 ? "first" : ""}`} style={{ gridColumn: `${gridColumnStart} / ${ x + 1 }` }}>
+            <div className={`asd ${elements.length === 0 ? "first" : ""} ${cellsToVisit === 0 ? "last" : ""}`} style={{ gridColumn: `${from + 1} / ${ currentColumn + 1 }` }}>
               <p>9:15 - 15:00 Mathematics 101</p>
             </div>
           ),
-          row: y,
+          row: currentRow,
         })
-
-        x = 0
-        y++
-        gridColumnStart = 1
+        
+        currentColumn = 0
+        currentRow++
+        creatingLabel = false
+        from = 0
       }
+      
     }
 
+    if (creatingLabel) {
+      elements.push({
+        element: (      
+          <div className={`asd ${elements.length === 0 ? "first" : ""} last`} style={{ gridColumn: `${from + 1} / ${ currentColumn + 1 }` }}>
+            <p>9:15 - 15:00 Mathematics 101</p>
+          </div>
+        ),
+        row: currentRow,
+      })
+    }
         
-    elements.push({
-      element: (      
-        <div className="asd last" style={{ gridColumn: `${gridColumnStart} / ${ x + 1 }` }}>
-          <p>9:15 - 15:00 Mathematics 101</p>
-        </div>
-      ),
-      row: y,
-    })
- 
+    console.log(elements);
     return elements
   })
  
+  
 
   console.timeEnd("items") 
 
@@ -174,7 +180,7 @@ const Calendar = () => {
                 <div className="calendar__week">
                   <div className="calendar__task-container">
                     {
-                      a[1].map((data) => {
+                      a[0].map((data) => {
                         return data.row === week && data.element
                       })
                     }
