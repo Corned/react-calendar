@@ -110,14 +110,12 @@ const Calendar = () => {
 
       // Row changes
       if (x >= columns) {      
-        
-        console.log(`${gridColumnStart} / ${ x + 1 }`);
-        
+               
 
         elements.push({
           element: (      
-            <div className="asd" style={{ gridColumn: `${gridColumnStart} / ${ x + 1 }` }}>
-              <p>hello world, this is a test message, please remain calm</p>
+            <div className={`asd ${elements.length === 0 ? "first" : ""}`} style={{ gridColumn: `${gridColumnStart} / ${ x + 1 }` }}>
+              <p>9:15 - 15:00 Mathematics 101</p>
             </div>
           ),
           row: y,
@@ -132,25 +130,16 @@ const Calendar = () => {
         
     elements.push({
       element: (      
-        <div className="asd" style={{ gridColumn: `${gridColumnStart} / ${ x + 1 }` }}>
-          <p>hello world, this is a test message, please remain calm</p>
+        <div className="asd last" style={{ gridColumn: `${gridColumnStart} / ${ x + 1 }` }}>
+          <p>9:15 - 15:00 Mathematics 101</p>
         </div>
       ),
       row: y,
     })
-
-
-
-    console.log(elements);
-    
-    
-
-    // :P
+ 
     return elements
   })
-
-  console.log(">>>", a[1]);
-  
+ 
 
   console.timeEnd("items") 
 

@@ -151,23 +151,41 @@ html, body, #root, .app {
 
 
 .calendar__task-container {
-
   position: absolute;
   width: 100%;
-  height: 40px;
-  margin-top: 40px;
+  height: 100%;
+
 
   display: grid;
+
+  margin-top: 40px;
   grid-template-columns: repeat(7, 1fr);
-  
+  grid-template-rows: repeat(3, 30px);
 }
 
 .asd {
-  background-color: red;
-  border: 2px solid blue;
+  background-color: rgb(10, 10, 10);
+  color: white;
+  font-weight: bold;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 0 10px;
+  
+  height: 100%;
+  
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;  
+}
+
+.asd.first {
+  border-radius: 10px 0 0 10px;
+  margin-left: 5px;
+}
+
+.asd.last {
+  border-radius: 0 10px 10px 0;
+  margin-right: 5px;
 }
