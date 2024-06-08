@@ -88,21 +88,17 @@ html, body, #root, .app {
   padding: 0 4px;
 }
 
-.calendar__cell-data {
-}
-
 .calendar__cell.grayed {
   background-color: #F5F9FD;
   color: #94A3B8;
 }
 
 .calendar__cell-number {
-  padding: 6px;
-  font-weight: bold;
+  padding: 5px;
 }
 
 .calendar__cell-number.today {
-  background-color: black;
+  background-color: #0F172A;
   border-radius: 99999px;
   color: white;
 }
@@ -121,34 +117,6 @@ html, body, #root, .app {
   gap: 5px;
 }
 
-.calendar__day-data {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.data {
-  background-color: black;
-  color: transparent;
-  white-space: nowrap;
-  padding: 4px 10px;
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.data.first-day {
-  border-radius: 10px 0 0 10px;
-  margin-left: 10px;
-  color: white;
-}
-
-.data.last-day {
-  border-radius: 0 10px 10px 0;
-  margin-right: 10px;
-}
-
 
 .calendar__task-container {
   position: absolute;
@@ -160,34 +128,41 @@ html, body, #root, .app {
 
   margin-top: 40px;
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(3, 30px);
+  grid-template-rows: repeat(3, 24px);
 }
 
-.asd {
-  background-color: rgb(10, 10, 10);
-  color: white;
-  font-weight: bold;
+.data {
+  background-color: #0F172A;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0 10px;
+  padding: 0 8px;
   
   height: 100%;
-  
-  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;  
 }
 
-.asd.first {
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
+.data > p {
+  width: 100%;
+  font-size: 14px;
+  
+  color: white;
+  font-weight: 500;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.data.first {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
   margin-left: 5px;
 }
 
-.asd.last {
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
+.data.last {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
   margin-right: 5px;
 }

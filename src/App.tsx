@@ -14,17 +14,15 @@ const days = [
 ]
 
 const mockData = [
-/*   {
-    start: moment([2024, 5, 5]),
-    end: moment([2024, 5, 10]),
-    label: "Matematiikka 1",
-    color: "red",
-  }, */
   {
-    start: moment([2024, 5, 11]),
+    start: moment([2024, 5, 4]),
+    end: moment([2024, 5, 19]),
+    label: "9:00 - 15:00 Mathematics 101",
+  },
+  {
+    start: moment([2024, 5, 8]),
     end: moment([2024, 5, 12]),
-    label: "Matematiikka 1",
-    color: "red",
+    label: "15:15 - 16:00 Algorithms and Datastructures",
   },
 ]
 
@@ -93,8 +91,6 @@ const Calendar = () => {
     const columnsOccupied = data.end.diff(data.start, "days") + 1
     const rowsOccupied = Math.ceil((columnsOccupied + data.start.day()) / columns)
 
-    console.log({ startingColumn, startingRow, rowsOccupied, columnsOccupied });
-
     const elements = []
 
     let currentColumn = startingColumn
@@ -109,14 +105,12 @@ const Calendar = () => {
       currentColumn++
       cellsToVisit--
 
-      console.log({ currentColumn, currentRow});
-
       if (currentColumn === columns) {
 
         elements.push({
           element: (      
-            <div className={`asd ${elements.length === 0 ? "first" : ""} ${cellsToVisit === 0 ? "last" : ""}`} style={{ gridColumn: `${from + 1} / ${ currentColumn + 1 }` }}>
-              <p>9:15 - 15:00 Mathematics 101</p>
+            <div className={`data ${elements.length === 0 ? "first" : ""} ${cellsToVisit === 0 ? "last" : ""}`} style={{ gridColumn: `${from + 1} / ${ currentColumn + 1 }` }}>
+              <p>{ data.label }</p>
             </div>
           ),
           row: currentRow,
@@ -133,15 +127,14 @@ const Calendar = () => {
     if (creatingLabel) {
       elements.push({
         element: (      
-          <div className={`asd ${elements.length === 0 ? "first" : ""} last`} style={{ gridColumn: `${from + 1} / ${ currentColumn + 1 }` }}>
-            <p>9:15 - 15:00 Mathematics 101</p>
+          <div className={`data ${elements.length === 0 ? "first" : ""} last`} style={{ gridColumn: `${from + 1} / ${ currentColumn + 1 }` }}>
+            <p>{ data.label }</p>
           </div>
         ),
         row: currentRow,
       })
     }
         
-    console.log(elements);
     return elements
   })
  
