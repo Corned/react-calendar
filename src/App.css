@@ -79,6 +79,19 @@ html, body, #root, .app {
   display: grid;
   grid-template-rows: 40px 1fr;
   outline: 1px solid #E8EDF3;
+  transition: all 0.1s linear;
+}
+
+.calendar__cell:hover {
+  cursor: pointer;
+  outline: 3px solid #E8EDF3;
+  z-index: 2;
+  transform: scale(1.05);
+}
+
+.calendar__cell.grayed {
+  background-color: #F5F9FD;
+  color: #94A3B8;
 }
 
 .calendar__cell-header {
@@ -89,13 +102,9 @@ html, body, #root, .app {
   padding: 0 4px;
 }
 
-.calendar__cell.grayed {
-  background-color: #F5F9FD;
-  color: #94A3B8;
-}
-
 .calendar__cell-number {
   padding: 5px;
+  user-select: none;
 }
 
 .calendar__cell-number.today {
@@ -118,10 +127,13 @@ html, body, #root, .app {
   gap: 4px 0;
 
   grid-auto-flow: column dense;
+  pointer-events: none;
 }
 
 
 .block {
+  z-index: 5;
+  pointer-events: all;
   background-color: #0f172a;
 
   display: flex;
@@ -131,6 +143,10 @@ html, body, #root, .app {
   
   height: 100%;
   overflow: hidden;
+}
+
+.block:hover {
+  cursor: pointer;
 }
 
 .block > p {

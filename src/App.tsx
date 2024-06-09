@@ -36,7 +36,8 @@ const columns = 7
 const rows = 6
 
 const Calendar = () => {
-  const [ date, setDate ] = useState(moment())  
+  const [ date, setDate ] = useState(moment())
+  const [ modal, setModal ] = useState(null)
 
   const addMonth = () => {
     setDate((oldDate) => oldDate.clone().add({ month: 1 }))
@@ -44,6 +45,11 @@ const Calendar = () => {
 
   const removeMonth = () => {
     setDate((oldDate) => oldDate.clone().subtract({ month: 1 }))
+  }
+
+  const handleModal = (item) => {
+    console.log(item);
+    
   }
 
   const calendarCells = []
@@ -195,10 +201,13 @@ const Calendar = () => {
 
                   {
                     Array.from({ length: 7 }).map((_, day) => {
-                      const item = calendarCells[7 * week + day]
+                      const cellIndex = 7 * week + day
+                      const item = calendarCells[cellIndex]
                       
                       return (
-                        <div className={`calendar__cell ${item.currentMonth ? "" : "grayed"}`}>
+                        <div
+                          className={`calendar__cell ${item.currentMonth ? "" : "grayed"}`
+                        }>
                           <div className="calendar__cell-header">
                             <p className={`calendar__cell-number ${ item.date.isSame(today, "day") ? "today" : "" }`}>
                               { item.date.date().toString().padStart(2, "0") }
