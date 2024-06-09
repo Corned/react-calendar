@@ -8,11 +8,6 @@ import "moment/dist/locale/fi"
 
 moment.locale("fi")
 
-const days = [
-  "Ma", "Ti", "Ke",
-  "To", "Pe", "La", "Su",
-]
-
 const mockData = [
   {
     start: moment([2024, 5, 4]),
@@ -36,6 +31,10 @@ const mockData = [
   },
 ]
 
+const days = [ "Ma", "Ti", "Ke", "To", "Pe", "La", "Su" ]
+const columns = 7
+const rows = 6
+
 const Calendar = () => {
   const [ date, setDate ] = useState(moment())  
 
@@ -47,13 +46,7 @@ const Calendar = () => {
     setDate((oldDate) => oldDate.clone().subtract({ month: 1 }))
   }
 
-
-
-  const columns = 7
-  const rows = 6
-
-
-  const items = []
+  const calendarCells = []
 
   const today = moment()
   const lastMonth = date.clone().subtract({ month: 1 })
@@ -63,104 +56,101 @@ const Calendar = () => {
   const daysInNextMonth = nextMonth.daysInMonth()
  
   const firstDayOfCurrentMonth = moment([ date.year(), date.month(), 1 ]).day() - 1
-
   
-
-  console.time("items")
-  
-
-
   // Previous month
   for (let dayNumber = (daysInLastMonth - firstDayOfCurrentMonth); dayNumber < daysInLastMonth; dayNumber++) {
-    items.push({
+    calendarCells.push({
       date: moment([ lastMonth.year(), lastMonth.month(), dayNumber + 1 ]),
-      current: false,
+      currentMonth: false,
     })
   }
 
   // Current month
-  for (let dayNumber = 1; dayNumber <= date.daysInMonth(); dayNumber++) {
-    items.push({
-      date: moment([ date.year(), date.month(), dayNumber ]),
+  for (let dayNumber = 0; dayNumber < date.daysInMonth(); dayNumber++) {
+    calendarCells.push({
+      date: moment([ date.year(), date.month(), dayNumber + 1 ]),
       currentMonth: true,
     })
   }  
   
   // Next month
-  const daysInPreviousAndCurrent = items.length
-  for (let dayNumber = items.length; dayNumber < rows * columns; dayNumber++) {
-    items.push({
+  const daysInPreviousAndCurrent = calendarCells.length
+  for (let dayNumber = calendarCells.length; dayNumber < rows * columns; dayNumber++) {
+    calendarCells.push({
       date: moment([ nextMonth.year(), nextMonth.month(), dayNumber - daysInPreviousAndCurrent + 1 ]),
       currentMonth: false,
     })
   }
 
-  const a = mockData.map((data) => {
+  // Generate calendar schedule blocks
+  const blocks = mockData.map((data) => {
+    // Figure out in what column and row the schedule element starts from
+    // and how big it should be.
     const startingColumn = data.start.day() - 1
-    const startingRow = Math.floor(items.findIndex((item) => item.date.isSame(data.start, "day")) / 7)
+    const startingRow = Math.floor(calendarCells.findIndex((item) => item.date.isSame(data.start, "day")) / 7)
     const columnsOccupied = data.end.diff(data.start, "days") + 1
     const rowsOccupied = Math.ceil((columnsOccupied + data.start.day()) / columns)
 
-    const elements = []
+    const blocks = []
 
     let currentWeek = data.start.week()
     let currentColumn = startingColumn
     let currentRow = startingRow
     let cellsToVisit = columnsOccupied
-    let creatingLabel = true
-
-    let from = currentColumn
+    let creatingBlock = true
+    let originColumn = currentColumn
 
     while (cellsToVisit > 0) {
-      creatingLabel = true
+      creatingBlock = true
       currentColumn++
       cellsToVisit--
 
+      // Current block is starting to be too big for the view
+      if (currentRow === rows) {
+        break
+      }
+
+      // If true, row changes
       if (currentColumn === columns) {
 
-        elements.push({
+        blocks.push({
           element: (      
             <div
-              className={`data ${elements.length === 0 ? "first" : ""} ${cellsToVisit === 0 ? "last" : ""}`}
-              style={{ gridColumn: `${from + 1} / ${ currentColumn + 1 }`, gridRow: "auto" }}
+              className={`block ${blocks.length === 0 ? "first" : ""} ${cellsToVisit === 0 ? "last" : ""}`}
+              style={{ gridColumn: `${originColumn + 1} / ${ currentColumn + 1 }` }}
             >
               <p>{ data.label }</p>
             </div>
           ),
-          row: currentRow,
           week: currentWeek,
         })
         
+        creatingBlock = false 
         currentColumn = 0
-        currentRow++
-        creatingLabel = false
-        from = 0
-        currentWeek++
+        currentRow++ // Increment row
+        originColumn = 0 // Next block will start from column 0
+        currentWeek++ // Increment week when going to the next row
       }
       
     }
 
-    if (creatingLabel) {
-      elements.push({
+    if (creatingBlock) {
+      blocks.push({
         element: (      
           <div
-            className={`data ${elements.length === 0 ? "first" : ""} last`}
-            style={{ gridColumn: `${from + 1} / ${ currentColumn + 1 }`, gridRow: "auto" }}
+            className={`block ${blocks.length === 0 ? "first" : ""} last`}
+            style={{ gridColumn: `${originColumn + 1} / ${ currentColumn + 1 }` }}
           >
             <p>{ data.label }</p>
           </div>
         ),
-        row: currentRow,
         week: currentWeek,
       })
     }
         
-    return elements
-  })
- 
+    return blocks
+  }).flat()
   
-
-  console.timeEnd("items") 
 
   return (
 
@@ -179,7 +169,7 @@ const Calendar = () => {
         <div className="calendar__header">
           {
             days.map((day) => (
-              <div className="calendar__header-title">
+              <div key={day} className="calendar__header-title">
                 <p>{ day }</p>
               </div>
             ))
@@ -189,21 +179,23 @@ const Calendar = () => {
 
           {
             Array.from({ length: 6 }).map((_, week) => {
-              const actualWeekNumber = items[0].date.week() + week
+              // Get the first top left cell of the calendar and check its week number
+              const actualWeekNumber = calendarCells[0].date.week() + week
               
               return (
                 <div className="calendar__week">
-                  <div className="calendar__task-container">
+                  <div className="calendar__block-container">
                     {
-                      a.flat().map((data) => {
-                        return (data.row === week && data.week === actualWeekNumber) && data.element
-                      })
+
+                      blocks
+                        .filter((data) => data.week === actualWeekNumber)
+                        .map((data) => data.element)
                     }
                   </div>
 
                   {
                     Array.from({ length: 7 }).map((_, day) => {
-                      const item = items[7 * week + day]
+                      const item = calendarCells[7 * week + day]
                       
                       return (
                         <div className={`calendar__cell ${item.currentMonth ? "" : "grayed"}`}>
