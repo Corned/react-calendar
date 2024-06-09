@@ -29,6 +29,11 @@ const mockData = [
     end: moment([2024, 5, 15]),
     label: "9:00 - 12:00 Extended Brunch",
   },
+  {
+    start: moment([2024, 5, 27]),
+    end: moment([2024, 6, 5]),
+    label: "9:00 - 12:00 Schedule Testing",
+  },
 ]
 
 const Calendar = () => {
@@ -59,6 +64,8 @@ const Calendar = () => {
  
   const firstDayOfCurrentMonth = moment([ date.year(), date.month(), 1 ]).day() - 1
 
+  
+
   console.time("items")
   
 
@@ -77,7 +84,7 @@ const Calendar = () => {
       date: moment([ date.year(), date.month(), dayNumber ]),
       currentMonth: true,
     })
-  }
+  }  
   
   // Next month
   const daysInPreviousAndCurrent = items.length
@@ -96,6 +103,7 @@ const Calendar = () => {
 
     const elements = []
 
+    let currentWeek = data.start.week()
     let currentColumn = startingColumn
     let currentRow = startingRow
     let cellsToVisit = columnsOccupied
@@ -120,12 +128,14 @@ const Calendar = () => {
             </div>
           ),
           row: currentRow,
+          week: currentWeek,
         })
         
         currentColumn = 0
         currentRow++
         creatingLabel = false
         from = 0
+        currentWeek++
       }
       
     }
@@ -141,6 +151,7 @@ const Calendar = () => {
           </div>
         ),
         row: currentRow,
+        week: currentWeek,
       })
     }
         
@@ -178,12 +189,14 @@ const Calendar = () => {
 
           {
             Array.from({ length: 6 }).map((_, week) => {
+              const actualWeekNumber = items[0].date.week() + week
+              
               return (
                 <div className="calendar__week">
                   <div className="calendar__task-container">
                     {
                       a.flat().map((data) => {
-                        return data.row === week && data.element
+                        return (data.row === week && data.week === actualWeekNumber) && data.element
                       })
                     }
                   </div>
