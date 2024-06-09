@@ -16,13 +16,18 @@ const days = [
 const mockData = [
   {
     start: moment([2024, 5, 4]),
-    end: moment([2024, 5, 19]),
+    end: moment([2024, 5, 10]),
     label: "9:00 - 15:00 Mathematics 101",
   },
   {
-    start: moment([2024, 5, 8]),
-    end: moment([2024, 5, 12]),
+    start: moment([2024, 5, 6]),
+    end: moment([2024, 5, 13]),
     label: "15:15 - 16:00 Algorithms and Datastructures",
+  },
+  {
+    start: moment([2024, 5, 11]),
+    end: moment([2024, 5, 15]),
+    label: "9:00 - 12:00 Extended Brunch",
   },
 ]
 
@@ -83,8 +88,6 @@ const Calendar = () => {
     })
   }
 
-
-  const testing = []
   const a = mockData.map((data) => {
     const startingColumn = data.start.day() - 1
     const startingRow = Math.floor(items.findIndex((item) => item.date.isSame(data.start, "day")) / 7)
@@ -109,7 +112,10 @@ const Calendar = () => {
 
         elements.push({
           element: (      
-            <div className={`data ${elements.length === 0 ? "first" : ""} ${cellsToVisit === 0 ? "last" : ""}`} style={{ gridColumn: `${from + 1} / ${ currentColumn + 1 }` }}>
+            <div
+              className={`data ${elements.length === 0 ? "first" : ""} ${cellsToVisit === 0 ? "last" : ""}`}
+              style={{ gridColumn: `${from + 1} / ${ currentColumn + 1 }`, gridRow: "auto" }}
+            >
               <p>{ data.label }</p>
             </div>
           ),
@@ -127,7 +133,10 @@ const Calendar = () => {
     if (creatingLabel) {
       elements.push({
         element: (      
-          <div className={`data ${elements.length === 0 ? "first" : ""} last`} style={{ gridColumn: `${from + 1} / ${ currentColumn + 1 }` }}>
+          <div
+            className={`data ${elements.length === 0 ? "first" : ""} last`}
+            style={{ gridColumn: `${from + 1} / ${ currentColumn + 1 }`, gridRow: "auto" }}
+          >
             <p>{ data.label }</p>
           </div>
         ),
@@ -173,7 +182,7 @@ const Calendar = () => {
                 <div className="calendar__week">
                   <div className="calendar__task-container">
                     {
-                      a[0].map((data) => {
+                      a.flat().map((data) => {
                         return data.row === week && data.element
                       })
                     }
