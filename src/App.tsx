@@ -35,6 +35,14 @@ const days = [ "Ma", "Ti", "Ke", "To", "Pe", "La", "Su" ]
 const columns = 7
 const rows = 6
 
+const Popup = () => {
+  return (
+    <div className="popup">
+      <p>POP!</p>
+    </div>
+  )
+}
+
 const Calendar = () => {
   const [ date, setDate ] = useState(moment())
   const [ modal, setModal ] = useState(null)
@@ -49,7 +57,6 @@ const Calendar = () => {
 
   const handleModal = (item) => {
     console.log(item);
-    
   }
 
   const calendarCells = []
@@ -213,6 +220,10 @@ const Calendar = () => {
                               { item.date.date().toString().padStart(2, "0") }
                             </p>
                           </div>
+
+                         {
+                          cellIndex === 16 && <Popup />
+                         }
                         </div>
                       )
                     })

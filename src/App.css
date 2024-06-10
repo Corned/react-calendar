@@ -44,7 +44,6 @@ html, body, #root, .app {
   margin: 0 auto;
   border-radius: 10px;
   outline: 1px solid #E8EDF3;
-  overflow: hidden;
 }
 
 .calendar__header {
@@ -74,19 +73,19 @@ html, body, #root, .app {
 }
 
 .calendar__cell {
+  position: relative;
   background-color: white;
 
   display: grid;
   grid-template-rows: 40px 1fr;
   outline: 1px solid #E8EDF3;
   transition: all 0.1s linear;
+  border: 0px solid #E8EDF3;
 }
 
 .calendar__cell:hover {
   cursor: pointer;
-  outline: 3px solid #E8EDF3;
-  z-index: 2;
-  transform: scale(1.05);
+  border: 3px solid #E8EDF3;
 }
 
 .calendar__cell.grayed {
@@ -171,3 +170,23 @@ html, body, #root, .app {
   border-bottom-right-radius: 6px;
   margin-right: 3px;
 }
+
+
+.popup {
+  cursor: auto;
+  pointer-events: all;
+  background-color: white;
+  padding: 10px;
+  border-radius: 3px;
+  border: 1px solid #E8EDF3;
+
+  width: 250px;
+  height: 400px;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: 20 !important;
+}
+
