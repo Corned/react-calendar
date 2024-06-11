@@ -10,24 +10,36 @@ moment.locale("fi")
 
 const mockData = [
   {
-    start: moment([2024, 5, 4]),
-    end: moment([2024, 5, 10]),
-    label: "9:00 - 15:00 Mathematics 101",
+    startDate: moment([2024, 5, 4]),
+    endDate: moment([2024, 5, 10]),
+    startTime: "9:00",
+    endTime: "15:00",
+    label: "Mathematics 101",
+    teacher: "Onni Opettaja",
   },
   {
-    start: moment([2024, 5, 6]),
-    end: moment([2024, 5, 13]),
-    label: "15:15 - 16:00 Algorithms and Datastructures",
+    startDate: moment([2024, 5, 6]),
+    endDate: moment([2024, 5, 13]),
+    startTime: "15:15",
+    endTime: "16:00",
+    label: "Algorithms and Datastructures",
+    teacher: "Onni Opettaja",
   },
   {
-    start: moment([2024, 5, 11]),
-    end: moment([2024, 5, 15]),
-    label: "9:00 - 12:00 Extended Brunch",
+    startDate: moment([2024, 5, 11]),
+    endDate: moment([2024, 5, 15]),
+    startTime: "9:00",
+    endTime: "12:00",
+    label: "Extended Brunch",
+    teacher: "Onni Opettaja",
   },
   {
-    start: moment([2024, 5, 27]),
-    end: moment([2024, 6, 5]),
-    label: "9:00 - 12:00 Schedule Testing",
+    startDate: moment([2024, 5, 27]),
+    endDate: moment([2024, 6, 5]),
+    startTime: "9:00",
+    endTime: "12:00",
+    label: "Schedule Testing",
+    teacher: "Onni Opettaja",
   },
 ]
 
@@ -35,28 +47,61 @@ const days = [ "Ma", "Ti", "Ke", "To", "Pe", "La", "Su" ]
 const columns = 7
 const rows = 6
 
-const Popup = () => {
+const Popup = ({ close }) => {
+  const handleClose = (event) => {
+    event.stopPropagation()
+    console.log("?????????");
+    
+    close()
+  }
+  
   return (
     <div className="popup">
-      <p>POP!</p>
+      <div className="popup__header">
+        <div onClick={handleClose}>X</div>
+      </div>
+
+      <div className="popup__container">
+        <div className="day-calendar">
+          <div className="day-calendar__time">
+            {
+              Array.from({ length: 24 }).map((_, index) => {
+                return <p>{ index }</p>
+              })
+            }
+          </div>
+          <div className="day-calendar__blocks">
+            {
+              Array.from({ length: 24 }).map((_, index) => {
+                return <div></div>
+              })
+            }
+          </div>
+        </div>
+      </div>
+
     </div>
   )
 }
 
 const Calendar = () => {
   const [ date, setDate ] = useState(moment())
-  const [ modal, setModal ] = useState(null)
+  const [ modal, setModal ] = useState(-1)
 
   const addMonth = () => {
     setDate((oldDate) => oldDate.clone().add({ month: 1 }))
+    setModal(null)
   }
 
   const removeMonth = () => {
     setDate((oldDate) => oldDate.clone().subtract({ month: 1 }))
+    setModal(null)
   }
 
-  const handleModal = (item) => {
-    console.log(item);
+  const handleModal = (index) => {
+    console.log(`handleModal called with value of ${index}`)
+    setModal(index)
+    console.log(`handleModal finished`)
   }
 
   const calendarCells = []
@@ -99,14 +144,14 @@ const Calendar = () => {
   const blocks = mockData.map((data) => {
     // Figure out in what column and row the schedule element starts from
     // and how big it should be.
-    const startingColumn = data.start.day() - 1
-    const startingRow = Math.floor(calendarCells.findIndex((item) => item.date.isSame(data.start, "day")) / 7)
-    const columnsOccupied = data.end.diff(data.start, "days") + 1
-    const rowsOccupied = Math.ceil((columnsOccupied + data.start.day()) / columns)
+    const startingColumn = data.startDate.day() - 1
+    const startingRow = Math.floor(calendarCells.findIndex((item) => item.date.isSame(data.startDate, "day")) / 7)
+    const columnsOccupied = data.endDate.diff(data.startDate, "days") + 1
+    const rowsOccupied = Math.ceil((columnsOccupied + data.startDate.day()) / columns)
 
     const blocks = []
 
-    let currentWeek = data.start.week()
+    let currentWeek = data.startDate.week()
     let currentColumn = startingColumn
     let currentRow = startingRow
     let cellsToVisit = columnsOccupied
@@ -132,7 +177,7 @@ const Calendar = () => {
               className={`block ${blocks.length === 0 ? "first" : ""} ${cellsToVisit === 0 ? "last" : ""}`}
               style={{ gridColumn: `${originColumn + 1} / ${ currentColumn + 1 }` }}
             >
-              <p>{ data.label }</p>
+              <p>{ `${data.startTime} ${data.label}` }</p>
             </div>
           ),
           week: currentWeek,
@@ -154,7 +199,7 @@ const Calendar = () => {
             className={`block ${blocks.length === 0 ? "first" : ""} last`}
             style={{ gridColumn: `${originColumn + 1} / ${ currentColumn + 1 }` }}
           >
-            <p>{ data.label }</p>
+            <p>{ `${data.startTime} ${data.label}` }</p>
           </div>
         ),
         week: currentWeek,
@@ -167,18 +212,18 @@ const Calendar = () => {
 
   return (
 
-    <>
-      <div className="calendar__controls">
-        <p>{ date.format("MMMM YYYY") }</p>
-
-        <div className="nav">
-          <button onClick={() => setDate(moment())}>{"Tänään"}</button>
-          <button onClick={removeMonth}>{"Edellinen"}</button>
-          <button onClick={addMonth}>{"Seuraava"}</button>
-        </div>
-      </div>
-      
+    <>      
       <div className="calendar">
+        <div className="calendar__controls">
+          <p className="calendar__current-date">{ date.format("MMMM YYYY") }</p>
+
+          <div className="nav">
+            <button onClick={() => setDate(moment())}>{"Tänään"}</button>
+            <button onClick={removeMonth}>{"Edellinen"}</button>
+            <button onClick={addMonth}>{"Seuraava"}</button>
+          </div>
+        </div>
+
         <div className="calendar__header">
           {
             days.map((day) => (
@@ -213,8 +258,9 @@ const Calendar = () => {
                       
                       return (
                         <div
-                          className={`calendar__cell ${item.currentMonth ? "" : "grayed"}`
-                        }>
+                          className={`calendar__cell ${item.currentMonth ? "" : "grayed"}`}
+                          onClick={() => handleModal(cellIndex)}
+                        >
                           <div className="calendar__cell-header">
                             <p className={`calendar__cell-number ${ item.date.isSame(today, "day") ? "today" : "" }`}>
                               { item.date.date().toString().padStart(2, "0") }
@@ -222,7 +268,7 @@ const Calendar = () => {
                           </div>
 
                          {
-                          cellIndex === 16 && <Popup />
+                          cellIndex === modal && <Popup close={() => handleModal(-1)} />
                          }
                         </div>
                       )
