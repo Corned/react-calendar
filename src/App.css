@@ -191,7 +191,6 @@ html, body, #root, .app {
 .popup {
   cursor: auto;
   background-color: white;
-  padding: 10px 20px;
   border-radius: 3px;
   border: 1px solid #E8EDF3;
 
@@ -215,24 +214,26 @@ html, body, #root, .app {
 }
 
 .popup__header {
+  padding: 10px;
   display: flex;
   flex-direction: row;
   justify-content: right;
 }
 
-.popup__header > div {
-  background-color: transparent;
-  font-family: monospace;
-  padding: 4px;
-  border: none;
-  font-size: 2rem;
+.popup__header > .cross {
+  border-radius: 9999px;
+  cursor: pointer;
 }
+
+
 
 .popup__container {
   overflow-y: scroll;
   height: 100%;
+  padding: 10px 10px 10px 20px;
+  margin: 0 10px 0 0;
+  box-sizing: border-box;
 }
-
 
 .day-calendar {
   display: grid;
