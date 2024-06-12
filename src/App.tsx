@@ -42,43 +42,43 @@ const mockData = [
     teacher: "Onni Opettaja",
   },
   {
-    startDate: moment([2024, 5, 18]),
-    endDate: moment([2024, 5, 18]),
+    startDate: moment([2024, 5, 17]),
+    endDate: moment([2024, 5, 19]),
     startTime: "9:00",
     endTime: "10:00",
     label: "Matematiikka 1",
     teacher: "Onni Opettaja",
   },
   {
-    startDate: moment([2024, 5, 18]),
-    endDate: moment([2024, 5, 18]),
+    startDate: moment([2024, 5, 19]),
+    endDate: moment([2024, 5, 21]),
+    startTime: "9:00",
+    endTime: "10:00",
+    label: "Matematiikka 1",
+    teacher: "Onni Opettaja",
+  },
+  {
+    startDate: moment([2024, 5, 19]),
+    endDate: moment([2024, 5, 21]),
     startTime: "10:00",
     endTime: "11:00",
-    label: "Matematiikka 2",
+    label: "Biologia 2",
     teacher: "Onni Opettaja",
   },
   {
-    startDate: moment([2024, 5, 18]),
-    endDate: moment([2024, 5, 18]),
+    startDate: moment([2024, 5, 19]),
+    endDate: moment([2024, 5, 21]),
     startTime: "11:00",
     endTime: "12:00",
-    label: "Matematiikka 3",
+    label: "Uskonto 3",
     teacher: "Onni Opettaja",
   },
   {
-    startDate: moment([2024, 5, 18]),
-    endDate: moment([2024, 5, 18]),
+    startDate: moment([2024, 5, 19]),
+    endDate: moment([2024, 5, 21]),
     startTime: "12:00",
     endTime: "13:00",
-    label: "Matematiikka 4",
-    teacher: "Onni Opettaja",
-  },
-  {
-    startDate: moment([2024, 5, 17]),
-    endDate: moment([2024, 5, 19]),
-    startTime: "11:00",
-    endTime: "12:00",
-    label: "BOOM",
+    label: "Psykologia 4",
     teacher: "Onni Opettaja",
   },
 ]
@@ -146,6 +146,7 @@ const Calendar = () => {
   }
 
   const calendarCells = []
+  const amountOfBlocksInCells = []
 
   const today = moment()
   const lastMonth = date.clone().subtract({ month: 1 })
@@ -180,6 +181,26 @@ const Calendar = () => {
       currentMonth: false,
     })
   }
+
+  // Count number of blocks in each cell
+  for (let i = 0; i < calendarCells.length; i++) {
+    const date = calendarCells[i].date
+
+    for (let j = 0; j < mockData.length; j++) {
+      const data = mockData[j]
+      const isDateBetween = date.isBetween(data.startDate, data.endDate, null, "[]")
+
+      if (!isDateBetween) {
+        continue
+      }
+
+      if (!amountOfBlocksInCells[i]) {
+        amountOfBlocksInCells[i] = 0
+      }
+
+      amountOfBlocksInCells[i] = amountOfBlocksInCells[i] + 1
+    }
+  } 
 
   // Generate calendar schedule blocks
   const blocks = mockData.map((data) => {
@@ -309,10 +330,33 @@ const Calendar = () => {
 
                   <div className="calendar__block-container">
                     {
-
                       blocks
                         .filter((data) => data.week === actualWeekNumber)
                         .map((data) => data.element)
+                    }
+
+                    {
+                      Array.from({ length: 7 }).map((_, day) => {
+                        const cellIndex = 7 * week + day
+                        const amountOfBlocks = amountOfBlocksInCells[cellIndex]
+
+                        if (!amountOfBlocks || (amountOfBlocks - 3) < 1) {
+                          return
+                        }
+
+                        const blockString = (amountOfBlocks - 3) === 1
+                          ? `+1 muu varaus`
+                          : `+${amountOfBlocks - 3} muuta varausta`
+                        
+                        return (
+                          <div
+                            className={"block first last"}
+                            style={{ gridColumn: day + 1, gridRow: 4, backgroundColor: "#2f4371" }}
+                          >
+                            <p>{ blockString }</p>
+                          </div>
+                        )
+                      })
                     }
                   </div>
 
