@@ -87,11 +87,39 @@ const days = [ "Ma", "Ti", "Ke", "To", "Pe", "La", "Su" ]
 const columns = 7
 const rows = 6
 
-const Popup = ({ close }) => {
+const Popup = ({ date, close }) => {
+  const blocks = mockData.map((data) => {
+
+    const isDateBetween = date.isBetween(data.startDate, data.endDate, null, "[]")
+    if (!isDateBetween) {
+      return
+    }
+
+    const rowStart = Number(data.startTime.split(":")[0])
+    const rowEnd = Number(data.endTime.split(":")[0])
+
+    console.log(rowStart, rowEnd);
+    
+
+    return (
+      <div
+        className={`block first last`}
+        style={{ gridRow: `${rowStart + 1} / ${ rowEnd + 1 }`, gridColumn: 1, zIndex: 10000 }}
+      >
+        <p>{data.label}</p>
+        <p>{data.teacher}</p>
+      </div>
+    )
+
+  }).filter((a) => !!a)
+  
   const handleClose = (event) => {
     event.stopPropagation()    
     close()
   }
+
+  console.log(blocks);
+  
   
   return (
     <div className="popup">
@@ -112,11 +140,16 @@ const Popup = ({ close }) => {
             }
           </div>
           <div className="day-calendar__blocks">
+
+
             {
               Array.from({ length: 24 }).map((_, index) => {
-                return <div></div>
+                return <div className="day-calendar__blocks-background" style={{ gridColumn: "1 / 3", gridRow: index + 1 }}></div>
               })
             }
+
+            { blocks.map(block => block) }
+
           </div>
         </div>
       </div>
@@ -321,7 +354,7 @@ const Calendar = () => {
                           </p>
 
                          {
-                          cellIndex === modal && <Popup close={() => handleModal(-1)} />
+                          cellIndex === modal && <Popup date={item.date} close={() => handleModal(-1)} />
                          }
                         </div>
                       )
