@@ -41,6 +41,46 @@ const mockData = [
     label: "Schedule Testing",
     teacher: "Onni Opettaja",
   },
+  {
+    startDate: moment([2024, 5, 18]),
+    endDate: moment([2024, 5, 18]),
+    startTime: "9:00",
+    endTime: "10:00",
+    label: "Matematiikka 1",
+    teacher: "Onni Opettaja",
+  },
+  {
+    startDate: moment([2024, 5, 18]),
+    endDate: moment([2024, 5, 18]),
+    startTime: "10:00",
+    endTime: "11:00",
+    label: "Matematiikka 2",
+    teacher: "Onni Opettaja",
+  },
+  {
+    startDate: moment([2024, 5, 18]),
+    endDate: moment([2024, 5, 18]),
+    startTime: "11:00",
+    endTime: "12:00",
+    label: "Matematiikka 3",
+    teacher: "Onni Opettaja",
+  },
+  {
+    startDate: moment([2024, 5, 18]),
+    endDate: moment([2024, 5, 18]),
+    startTime: "12:00",
+    endTime: "13:00",
+    label: "Matematiikka 4",
+    teacher: "Onni Opettaja",
+  },
+  {
+    startDate: moment([2024, 5, 17]),
+    endDate: moment([2024, 5, 19]),
+    startTime: "11:00",
+    endTime: "12:00",
+    label: "BOOM",
+    teacher: "Onni Opettaja",
+  },
 ]
 
 const days = [ "Ma", "Ti", "Ke", "To", "Pe", "La", "Su" ]
@@ -49,25 +89,17 @@ const rows = 6
 
 const Popup = ({ close }) => {
   const handleClose = (event) => {
-    event.stopPropagation()
-    console.log("?????????");
-    
+    event.stopPropagation()    
     close()
   }
   
   return (
     <div className="popup">
       <div className="popup__header">
-
         <svg className="cross" onClick={handleClose} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-
-
-
-
-
       </div>
 
       <div className="popup__container">
@@ -222,7 +254,7 @@ const Calendar = () => {
   return (
 
     <>      
-      <div className="calendar">
+      <div className="calendar-wrapper">
         <div className="calendar__controls">
           <p className="calendar__current-date">{ date.format("MMMM YYYY") }</p>
 
@@ -251,15 +283,6 @@ const Calendar = () => {
               
               return (
                 <div className="calendar__week">
-                  <div className="calendar__block-container">
-                    {
-
-                      blocks
-                        .filter((data) => data.week === actualWeekNumber)
-                        .map((data) => data.element)
-                    }
-                  </div>
-
                   {
                     Array.from({ length: 7 }).map((_, day) => {
                       const cellIndex = 7 * week + day
@@ -267,14 +290,14 @@ const Calendar = () => {
                       
                       return (
                         <div
+                          key={`cell-${cellIndex}`}
                           className={`calendar__cell ${item.currentMonth ? "" : "grayed"}`}
+                          style={{ gridRow: "1 / 3", gridColumn: day + 1 }}
                           onClick={() => handleModal(cellIndex)}
                         >
-                          <div className="calendar__cell-header">
-                            <p className={`calendar__cell-number ${ item.date.isSame(today, "day") ? "today" : "" }`}>
-                              { item.date.date().toString().padStart(2, "0") }
-                            </p>
-                          </div>
+                          <p className={`calendar__cell-number ${ item.date.isSame(today, "day") ? "today" : "" }`}>
+                            { item.date.date().toString().padStart(2, "0") }
+                          </p>
 
                          {
                           cellIndex === modal && <Popup close={() => handleModal(-1)} />
@@ -283,6 +306,15 @@ const Calendar = () => {
                       )
                     })
                   }
+
+                  <div className="calendar__block-container">
+                    {
+
+                      blocks
+                        .filter((data) => data.week === actualWeekNumber)
+                        .map((data) => data.element)
+                    }
+                  </div>
 
                 </div>
               )
