@@ -14,11 +14,13 @@ const rows = 6
 const Popup = ({ calendarData, date, close }) => {
   const blocks = calendarData.map((data) => {
 
+    // Check if block should be rendered
     const isDateBetween = date.isBetween(data.startDate, data.endDate, null, "[]")
     if (!isDateBetween) {
       return
     }
 
+    // Determine the height of the block based on time of the day
     const rowStart = Number(data.startTime.split(":")[0])
     const rowEnd = Number(data.endTime.split(":")[0])  
 
@@ -61,6 +63,7 @@ const Popup = ({ calendarData, date, close }) => {
 
           <div className="day-calendar__blocks-background-container">
             {
+              // Generate the background for blocks
               Array.from({ length: 24 }).map((_, index) => {
                 return (
                   <div
@@ -72,7 +75,7 @@ const Popup = ({ calendarData, date, close }) => {
           </div>
 
           <div className="day-calendar__blocks">
-            { blocks.map(block => block) }
+            { blocks }
           </div>
         </div>
       </div>
