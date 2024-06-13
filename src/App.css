@@ -176,6 +176,10 @@ html, body, #root, .app {
   margin-right: 3px;
 }
 
+.block__teacher-name {
+  font-size: 0.7rem !important;
+}
+
 
 .popup {
   cursor: auto;
@@ -254,7 +258,18 @@ html, body, #root, .app {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: repeat(24, 40px);
+  justify-content: center;
   overflow: hidden;
+}
+
+.day-calendar__blocks > .block {
+  padding-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  justify-content: start;
+
+  box-sizing: border-box;
 }
 
 .day-calendar__blocks-background {

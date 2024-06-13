@@ -107,7 +107,7 @@ const Popup = ({ date, close }) => {
         style={{ gridRow: `${rowStart + 1} / ${ rowEnd + 1 }`, gridColumn: 1, zIndex: 10000 }}
       >
         <p>{data.label}</p>
-        <p>{data.teacher}</p>
+        <p className="block__teacher-name">{data.teacher}</p>
       </div>
     )
 
@@ -124,6 +124,7 @@ const Popup = ({ date, close }) => {
   return (
     <div className="popup">
       <div className="popup__header">
+        { /* close button */ }
         <svg className="cross" onClick={handleClose} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M6 6L18 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -140,7 +141,6 @@ const Popup = ({ date, close }) => {
             }
           </div>
           <div className="day-calendar__blocks">
-
 
             {
               Array.from({ length: 24 }).map((_, index) => {
@@ -331,15 +331,16 @@ const Calendar = () => {
         <div className="calendar__body">
 
           {
-            Array.from({ length: 6 }).map((_, week) => {
+            // Generate each row one by one
+            Array.from({ length: rows }).map((_, week) => {
               // Get the first top left cell of the calendar and check its week number
               const actualWeekNumber = calendarCells[0].date.week() + week
               
               return (
                 <div className="calendar__week">
                   {
-                    Array.from({ length: 7 }).map((_, day) => {
-                      const cellIndex = 7 * week + day
+                    Array.from({ length: columns }).map((_, day) => {
+                      const cellIndex = columns * week + day
                       const item = calendarCells[cellIndex]
                       
                       return (
@@ -386,7 +387,7 @@ const Calendar = () => {
                             className={"block first last"}
                             style={{ gridColumn: day + 1, gridRow: 4, backgroundColor: "#2f4371" }}
                           >
-                            <p>{ blockString }</p>
+                            <p>{ "muut varaukset" }</p>
                           </div>
                         )
                       })
