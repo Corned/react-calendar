@@ -79,7 +79,6 @@ const mockData = [
 const App = () => {
   return (
     <div className="app">
-      <p>ASD</p>
       <Calendar calendarData={mockData}/>
     </div>
   )

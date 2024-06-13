@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 import { useState } from "react"
 import "./App.css"
 
@@ -20,10 +20,7 @@ const Popup = ({ calendarData, date, close }) => {
     }
 
     const rowStart = Number(data.startTime.split(":")[0])
-    const rowEnd = Number(data.endTime.split(":")[0])
-
-    console.log(rowStart, rowEnd);
-    
+    const rowEnd = Number(data.endTime.split(":")[0])  
 
     return (
       <div
@@ -61,16 +58,21 @@ const Popup = ({ calendarData, date, close }) => {
               })
             }
           </div>
-          <div className="day-calendar__blocks">
 
+          <div className="day-calendar__blocks-background-container">
             {
               Array.from({ length: 24 }).map((_, index) => {
-                return <div className="day-calendar__blocks-background" style={{ gridColumn: "1 / 3", gridRow: index + 1 }}></div>
+                return (
+                  <div
+                    className="day-calendar__blocks-background"
+                  ></div>
+                )
               })
             }
+          </div>
 
+          <div className="day-calendar__blocks">
             { blocks.map(block => block) }
-
           </div>
         </div>
       </div>
